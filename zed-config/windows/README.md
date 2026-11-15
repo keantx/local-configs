@@ -1,4 +1,4 @@
-## Config for zed
+## Config for zed Windows
 
 ### Usage
 ```powershell

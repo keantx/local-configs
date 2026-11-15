@@ -1,0 +1,114 @@
+{
+  "auto_install_extensions": {
+    "html": true,
+    "dockerfile": true,
+    "terraform": true,
+    "toml": true,
+    "catppuccin": true,
+    "catppuccin-icons": true,
+    "git-firefly": true,
+    "java": true,
+    "latex": true,
+    "markdown-oxide": true,
+    "sql": true,
+    "xml": true
+  },
+  "vim_mode": false,
+  "restore_on_startup": "launchpad",
+  "on_new_window": "empty_tab",
+  "on_last_window_closed": "quit_app",
+  "line_ending": "enforce_lf",
+  "toolbar": {
+    "code_actions": false,
+    "breadcrumbs": true
+  },
+  "minimap": {
+    "thumb_border": "none",
+    "thumb": "always",
+    "display_in": "active_editor",
+    "show": "auto"
+  },
+  "scrollbar": {
+    "show": "auto"
+  },
+  "relative_line_numbers": "disabled",
+  "gutter": {
+    "runnables": true,
+    "line_numbers": true
+  },
+  "autosave": {
+    "after_delay": {
+      "milliseconds": 2000
+    },
+  },
+  "prettier": {
+    "allowed": true
+  },
+  "title_bar": {
+    "show_branch_status_icon": true
+  },
+  "status_bar": {
+    "show_active_file": false,
+    "line_endings_button": true,
+    "active_encoding_button": "enabled",
+    "active_language_button": true
+  },
+  "terminal": {
+    "starts_open": true,
+    "shell": "system"
+  },
+  "git": {
+    "auto_fetch": {
+      "enabled": true
+    }
+  },
+  "audio": {},
+  "proxy": "",
+  "edit_predictions": {
+    "mercury": {
+      "prediction_debounce": 100
+    },
+    "zed": {
+      "prediction_debounce": 100
+    }
+  },
+  "disable_ai": true,
+  "project_panel": {
+    "button": true,
+    "dock": "left"
+  },
+  "outline_panel": {
+    "dock": "left"
+  },
+  "collaboration_panel": {
+    "button": false,
+    "dock": "left"
+  },
+  "agent": {
+    "dock": "right",
+    "favorite_models": [],
+    "model_parameters": []
+  },
+  "git_panel": {
+    "dock": "left"
+  },
+  "telemetry": {
+    "diagnostics": false,
+    "metrics": false,
+    "anthropic_retention": false
+  },
+  "base_keymap": "VSCode",
+  "icon_theme": "Catppuccin Mocha",
+  "ui_font_size": 16,
+  "buffer_font_size": 15,
+  "theme": "Catppuccin Mocha",
+  "theme_overrides": {
+    "Catppuccin Mocha": {
+      "players": [
+        {
+          "cursor": "#74c7ec"
+        }
+      ]
+    }
+  }
+}
