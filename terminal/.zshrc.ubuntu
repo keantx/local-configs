@@ -1,0 +1,128 @@
+export EDITOR="vim"
+export VISUAL="$EDITOR"
+export PAGER="less"
+export LESS="-R -F -X"
+export LANG="en_US.UTF-8"
+
+typeset -U path PATH
+path=(
+  "$HOME/.local/bin"
+  "$HOME/bin"
+  "$HOME/.cargo/bin"
+  "$HOME/go/bin"
+  $path
+)
+export PATH
+
+HISTFILE="$HOME/.zsh_history"
+HISTSIZE=50000
+SAVEHIST=50000
+
+setopt SHARE_HISTORY
+setopt HIST_IGNORE_ALL_DUPS
+setopt HIST_IGNORE_SPACE
+setopt HIST_REDUCE_BLANKS
+setopt HIST_VERIFY
+
+setopt AUTO_CD
+setopt AUTO_PUSHD
+setopt PUSHD_IGNORE_DUPS
+setopt PUSHD_SILENT
+setopt INTERACTIVE_COMMENTS
+setopt EXTENDED_GLOB
+setopt NO_BEEP
+#setopt CORRECT
+
+# autoload -Uz compinit
+# # Only regenerate the dump once a day (faster startup)
+# if [[ -n ${ZDOTDIR:-$HOME}/.zcompdump(#qN.mh+24) ]]; then
+#   compinit
+# else
+#   compinit -C
+# fi
+
+# Same as above but colour not messed up
+autoload -Uz compinit
+_zcd="${ZDOTDIR:-$HOME}/.zcompdump"
+
+if [[ ! -f $_zcd || -n $(find "$_zcd" -mtime +0 2>/dev/null) ]]; then
+  compinit
+else
+  compinit -C
+fi
+unset _zcd
+
+zstyle ':completion:*' menu select
+zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}' 'r:|[._-]=* r:|=*'
+zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
+zstyle ':completion:*' use-cache on
+zstyle ':completion:*' cache-path "$HOME/.cache/zsh/zcompcache"
+zstyle ':completion:*:descriptions' format '%F{yellow}-- %d --%f'
+
+bindkey -v
+export KEYTIMEOUT=1
+
+# Keep common keys working in insert mode
+bindkey -M viins '^?' backward-delete-char
+bindkey -M viins '^[[3~' delete-char
+bindkey -M viins '^[[H' beginning-of-line
+bindkey -M viins '^[[F' end-of-line
+bindkey -M viins '^[[1;5C' forward-word
+bindkey -M viins '^[[1;5D' backward-word
+bindkey -M viins '^[[A' history-search-backward
+bindkey -M viins '^[[B' history-search-forward
+
+(( $+commands[batcat] )) && alias bat='batcat'
+
+if (( $+commands[eza] )); then
+  alias ls='eza --icons --group-directories-first'
+  alias ll='eza -lah --icons --group-directories-first'
+  alias tree='eza --tree --icons'
+fi
+
+
+# Switch Azure subscription interactively (requires fzf)
+azsw() {
+  local sub
+  sub=$(az account list --query "[].name" -o tsv | fzf --prompt="subscription> ") || return
+  az account set --subscription "$sub" && az account show -o table
+}
+
+# Switch kubectl context interactively (requires fzf)
+kcx() {
+  local ctx
+  ctx=$(kubectl config get-contexts -o name | fzf --prompt="context> ") || return
+  kubectl config use-context "$ctx"
+}
+
+# ──────────────────────────────────────────────
+# fzf: Ctrl+R history, Ctrl+T files, Alt+C dirs
+# ──────────────────────────────────────────────
+if (( $+commands[fzf] )); then
+  if [[ -f /usr/share/doc/fzf/examples/key-bindings.zsh ]]; then
+    source /usr/share/doc/fzf/examples/key-bindings.zsh
+    source /usr/share/doc/fzf/examples/completion.zsh
+  else
+    source <(fzf --zsh 2>/dev/null)
+  fi
+  export FZF_DEFAULT_OPTS="--height 40% --layout=reverse --border"
+fi
+
+# ──────────────────────────────────────────────
+# Plugins (installed via apt)
+# ──────────────────────────────────────────────
+[[ -f /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh ]] \
+  && source /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+ZSH_AUTOSUGGEST_STRATEGY=(history completion)
+ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=244"
+
+# ──────────────────────────────────────────────
+# Prompt: Starship (keep near the end)
+# ──────────────────────────────────────────────
+(( $+commands[starship] )) && eval "$(starship init zsh)"
+
+# ──────────────────────────────────────────────
+# Syntax highlighting MUST be sourced last
+# ──────────────────────────────────────────────
+[[ -f /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]] \
+  && source /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
