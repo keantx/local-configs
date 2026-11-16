@@ -1,3 +1,7 @@
 shell-integration = detect
 shell-integration-features = cursor,sudo,title,ssh-env,ssh-terminfo
+font-family = "FiraCode Nerd Font Mono Reg"
+font-family-bold = "FiraCode Nerd Font Mono Bold"
+font-thicken = true
+adjust-cell-height = 10%
 config-file = ?auto/theme.ghostty
