@@ -85,13 +85,21 @@ if (( $+commands[eza] )); then
   alias tree='eza --tree --icons'
 fi
 
-
-# Switch Azure subscription interactively (requires fzf)
 azsw() {
   local sub
-  sub=$(az account list --query "[].name" -o tsv | fzf --prompt="subscription> ") || return
-  az account set --subscription "$sub" && az account show -o table
+  sub=$({ printf 'SUBSCRIPTION NAME\tTENANT\tSUBSCRIPTION ID\n'
+          az account list --all --query "[].[name, tenantDisplayName || tenantId || 'N/A', id, isDefault]" -o tsv |
+            awk -F '\t' 'BEGIN { OFS="\t" } { $4 = ($4 == "true" || $4 == "True") ? "*" : ""; print }'
+        } |
+    column -t -s$'\t' |
+    awk '{ if ($NF == "*") printf "\033[32m%s\033[0m\n", $0; else print $0 }' |
+    fzf --ansi --height=40% --reverse --border --header-lines=1 --prompt="Select Subscription> " |
+    awk '{print $(NF)}')
+
+  [ -n "$sub" ] && az account set -s "$sub" && echo "Currently active : $(az account show --query name -o tsv)"
 }
+
+
 
 # Switch kubectl context interactively (requires fzf)
 kcx() {
